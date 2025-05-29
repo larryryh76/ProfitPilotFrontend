@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import API from "../utils/api";
 import { useNavigate } from "react-router-dom";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 const Dashboard = () => {
   const [income, setIncome] = useState(0);
@@ -50,8 +57,13 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchIncome();
-    fetchChartData();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    } else {
+      fetchIncome();
+      fetchChartData();
+    }
   }, []);
 
   return (
