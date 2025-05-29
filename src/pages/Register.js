@@ -11,6 +11,7 @@ const Register = () => {
     referralCode: "",
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Added loading state
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,6 +19,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // start loading
     try {
       const res = await API.post("/auth/register", {
         name: form.username,
@@ -26,20 +28,26 @@ const Register = () => {
         referredBy: form.referralCode,
       });
       localStorage.setItem("token", res.data.token);
-      navigate("/welcome");
+      navigate("/token"); // redirect to token page to begin
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false); // stop loading
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 to-blue-200">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 to-blue-200 p-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-sm space-y-4"
+        className="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 space-y-4"
       >
-        <h2 className="text-2xl font-semibold text-center text-blue-800">Register</h2>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        <h2 className="text-3xl font-bold text-center text-blue-700">Create Account</h2>
+
+        {error && (
+          <p className="text-red-500 text-center text-sm">{error}</p>
+        )}
+
         <input
           type="text"
           name="username"
@@ -47,8 +55,9 @@ const Register = () => {
           value={form.username}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded-xl"
+          className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
+
         <input
           type="email"
           name="email"
@@ -56,8 +65,9 @@ const Register = () => {
           value={form.email}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded-xl"
+          className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
+
         <input
           type="password"
           name="password"
@@ -65,26 +75,34 @@ const Register = () => {
           value={form.password}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded-xl"
+          className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
+
         <input
           type="text"
           name="referralCode"
           placeholder="Referral Code (optional)"
           value={form.referralCode}
           onChange={handleChange}
-          className="w-full p-2 border rounded-xl"
+          className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400"
         />
+
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition"
+          disabled={loading}
+          className={`w-full py-3 rounded-xl font-semibold transition ${
+            loading
+              ? "bg-blue-400 text-white cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700"
+          }`}
         >
-          Register
+          {loading ? "Registering..." : "Register"}
         </button>
-        <p className="text-center text-sm">
+
+        <p className="text-center text-sm text-gray-600">
           Already have an account?{" "}
           <span
-            className="text-blue-600 cursor-pointer"
+            className="text-blue-600 font-medium hover:underline cursor-pointer"
             onClick={() => navigate("/login")}
           >
             Login
