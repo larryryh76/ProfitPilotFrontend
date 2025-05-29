@@ -6,14 +6,13 @@ const Welcome = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate('/token-creation');
-    }, 10000); // fallback redirect after 10 seconds
-
+      navigate('/login'); // Redirect to login after 10 seconds
+    }, 10000);
     return () => clearTimeout(timer);
   }, [navigate]);
 
   const handleContinue = () => {
-    navigate('/token-creation');
+    navigate('/login'); // Manual continue also goes to login
   };
 
   return (
