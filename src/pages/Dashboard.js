@@ -64,7 +64,7 @@ const Dashboard = () => {
       fetchIncome();
       fetchChartData();
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="p-4 min-h-screen bg-gradient-to-b from-sky-50 to-blue-100">
