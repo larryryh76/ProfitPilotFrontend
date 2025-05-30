@@ -23,10 +23,11 @@ const Dashboard = () => {
       setIncome(res.data.totalIncome);
     } catch (err) {
       if (err.response?.status === 401) {
+        console.warn("401 on income fetch. Redirecting to login.");
         localStorage.removeItem("token");
         navigate("/login");
       } else {
-        console.error("Fetch income error:", err);
+        console.error("Fetch income error:", err.response || err.message);
       }
     }
   };
@@ -37,10 +38,11 @@ const Dashboard = () => {
       setChartData(res.data);
     } catch (err) {
       if (err.response?.status === 401) {
+        console.warn("401 on chart fetch. Redirecting to login.");
         localStorage.removeItem("token");
         navigate("/login");
       } else {
-        console.error("Chart data error:", err);
+        console.error("Chart data error:", err.response || err.message);
       }
     }
   };
@@ -68,7 +70,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log("Token on dashboard mount:", token);
+
     if (!token) {
+      console.warn("No token found. Redirecting to login.");
       navigate("/login");
     } else {
       fetchIncome();

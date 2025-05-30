@@ -19,8 +19,10 @@ const Login = () => {
     try {
       const res = await API.post("/auth/login", form);
       localStorage.setItem("token", res.data.token);
+      console.log("Token stored:", res.data.token); // Debugging
       navigate("/dashboard");
     } catch (err) {
+      console.error("Login error:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
