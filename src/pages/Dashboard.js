@@ -22,7 +22,12 @@ const Dashboard = () => {
       const res = await API.get("/income");
       setIncome(res.data.totalIncome);
     } catch (err) {
-      console.error(err);
+      if (err.response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        console.error("Fetch income error:", err);
+      }
     }
   };
 
@@ -31,7 +36,12 @@ const Dashboard = () => {
       const res = await API.get("/token/performance");
       setChartData(res.data);
     } catch (err) {
-      console.error(err);
+      if (err.response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        console.error("Chart data error:", err);
+      }
     }
   };
 
@@ -76,7 +86,9 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div className="p-4 bg-blue-100 rounded-xl text-center">
             <p className="text-sm text-gray-600">Total Income</p>
-            <p className="text-2xl font-bold text-blue-800">${income.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-blue-800">
+              ${income.toFixed(2)}
+            </p>
           </div>
 
           <div className="p-4 bg-green-100 rounded-xl text-center">
